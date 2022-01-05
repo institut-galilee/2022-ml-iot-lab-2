@@ -173,6 +173,12 @@ def save_index(idxs:dict, path:str) -> None:
     with open(path, 'wb') as handle:
         pickle.dump(idxs, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
+def load_index(path:str) -> dict:
+    with open(path, 'rb') as handle:
+        try:
+            return pickle.load(handle)
+        except EOFError:
+            pass
 
 if __name__ == '__main__':
     build_sample()
