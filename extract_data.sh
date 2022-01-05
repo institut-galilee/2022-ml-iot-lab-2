@@ -1,6 +1,6 @@
 #!/bin/bash
 
-target_dir=./generated/tmp
+target_dir=./generated
 
 mkdir -p $target_dir
 
