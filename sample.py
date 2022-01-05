@@ -45,7 +45,9 @@ channels_basic = {
 }
 
 def size_of_index(index:list) -> int:
-    size = functools.reduce(lambda acc,portion: (portion[1]-portion[0])+acc, index, 0)
+    # BEWARE the last element of a portion is not included! This is due to the
+    # logic used in `extract_examples`
+    size = functools.reduce(lambda acc,portion: (portion[1]-portion[0]-1)+acc, index, 0)
     return size
 
 
@@ -112,7 +114,7 @@ def extract_examples(sample_index:list, channel:str) -> None:
                     if i > idx[1]:
                         idx = next(sample_index_iter)
 
-                    if idx[0]<=i and i<idx[1]:
+                    if idx[0]<=i and i<idx[1]:  # BEWARE the last element of a portion is not included! see implications on `size_of_index`
                         writer.writerow(row)
             except StopIteration:
                 pass
