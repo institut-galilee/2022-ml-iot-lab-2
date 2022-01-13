@@ -91,7 +91,16 @@ def sample(indexes:dict, student_id:int) -> list:
     return sample
 
 
-def extract_examples(sample_index:list, channel:str) -> None:
+def create_file_hierarchy(filename:str):
+    if not os.path.exists(os.path.dirname(filename)):
+        try:
+            os.makedirs(os.path.dirname(filename))
+        except OSError as exc: # Guard against race condition
+            if exc.errno != errno.EEXIST:
+                raise
+
+
+def extract_examples(sample_index:list, position:str, channel:str) -> None:
     """
     Given a sample index in the form of a list of tuples (start, end)
     specifying the starting and ending point of a portion of examples,
@@ -101,8 +110,14 @@ def extract_examples(sample_index:list, channel:str) -> None:
     # sort list in ascending order
     sample_index_sorted = sorted(sample_index, key=lambda tup: tup[0])
 
-    with open('./generated/tmp/train/Torso/'+channel+'.txt', 'r') as input_:
-        with open('./generated/sample/train/Torso/'+channel+'.txt', 'w') as output_:
+    input_file = './generated/tmp/train/'+position+'/'+channel+'.txt'
+    create_file_hierarchy(input_file)
+
+    output_file = './generated/sample/train/'+position+'/'+channel+'.txt'
+    create_file_hierarchy(output_file)
+
+    with open(input_file, 'r') as input_:
+        with open(output_file, 'w+') as output_:
             reader = csv.reader(input_)
             writer = csv.writer(output_)
 
